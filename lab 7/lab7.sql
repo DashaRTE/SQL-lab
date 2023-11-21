@@ -7,7 +7,7 @@ CREATE TABLE `category`
 CREATE TABLE `news` 
 (
     `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `content` VARCHAR(1000) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+    `content` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
     `author` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
     `creation_date` DATETIME NOT NULL,
     `category_id` INT UNSIGNED NOT NULL,
@@ -23,11 +23,10 @@ CREATE TABLE `user`
 CREATE TABLE `comment` 
 (
     `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `content` VARCHAR(1000) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+    `content` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
     `creation_date` DATETIME NOT NULL,
-    `user_id` INT UNSIGNED NOT NULL,
+    `user_name` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci ,
     `news_id` INT UNSIGNED NOT NULL,
-    FOREIGN KEY (`user_id`) REFERENCES `user`(`id`),
     FOREIGN KEY (`news_id`) REFERENCES `news`(`id`) 
 );
 
@@ -36,5 +35,9 @@ CREATE TABLE `rating`
     `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `value` INT NOT NULL CHECK (value >= 1 AND value <= 5),
     `user_id` INT UNSIGNED NOT NULL,
-    FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
+    `news_id` INT UNSIGNED NOT NULL,
+    `ip_address` VARCHAR(45) NOT NULL,
+    UNIQUE INDEX `unique_rating` (`user_id`, `news_id`, `ip_address`),
+    FOREIGN KEY (`user_id`) REFERENCES `user`(`id`),
+    FOREIGN KEY (`news_id`) REFERENCES `news`(`id`)
 );
